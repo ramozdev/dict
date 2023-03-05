@@ -1,22 +1,21 @@
 import { prisma } from '@/server/db'
-// import { EditSlangForm } from '@/components/edit-slang-form'
+import { EditSlangForm } from '@/components/edit-slang-form'
 import { getServerSession, type Session } from 'next-auth'
 
 import { authOptions } from '@/server/auth'
-import type { SlangApi } from '@/types'
 import type { GetServerSideProps } from 'next'
 import Layout from '@/components/layout'
+import { type ParsedSlangForEdit, parseSlangForEdit } from '@/lib/parse-slang-for-edit'
 
 type Props = {
-  slang: SlangApi
+  slang: ParsedSlangForEdit
   user: Session['user']
 }
 
-export default function Page({ slang }: Props) {
+export default function Page({ slang, user }: Props) {
   return (
     <Layout>
-      <pre>{JSON.stringify(slang, null, 2)}</pre>
-      {/* <EditSlangForm userId={user.id} slangId={slang.id} defaultValues={slang} /> */}
+      <EditSlangForm userId={user.id} slangId={slang.id} defaultValues={slang} />
     </Layout>
   )
 }
@@ -66,23 +65,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
 
   if (!payload) throw new Error('No data found')
 
-  const { createdAt, updatedAt, definitions, diminutive, augmentative, ...data } = payload
-
-  const result = {
-    ...data,
-    createdAt: createdAt.toISOString(),
-    updatedAt: updatedAt.toISOString(),
-    diminutive: diminutive ? diminutive : '',
-    augmentative: augmentative ? augmentative : '',
-    definitions: definitions.map(({ idiom, ...data }) => ({
-      ...data,
-      idiom: idiom ? idiom : ''
-    }))
-  }
+  const result = parseSlangForEdit(payload)
 
   return {
     props: {
-      slang: result
+      slang: result,
+      user: session.user
     }
   }
 }

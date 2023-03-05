@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { NavBar } from '@/components/navbar'
 import { Shell } from '@/components/shell'
 import { SideBar } from '@/components/sidebar'

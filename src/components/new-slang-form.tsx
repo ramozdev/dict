@@ -12,12 +12,13 @@ import { Antonyms } from '@/components/antonyms'
 import { Synonyms } from '@/components/synonyms'
 import { Tags } from '@/components/tags'
 import { Definitions } from '@/components/definitions'
-import type { SlangForm } from '@/lib/validations/slang'
+import type { SlangFormSchema } from '@/lib/validations/slang'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { newSlangSchema } from '@/lib/validations/new-slang'
+import { api } from '@/utils/api'
 
 type Props = {
-  defaultValues?: SlangForm
+  defaultValues?: SlangFormSchema
 }
 
 export function SlangForm({ defaultValues }: Props) {
@@ -27,7 +28,7 @@ export function SlangForm({ defaultValues }: Props) {
     setValue,
     control,
     formState: { errors }
-  } = useForm<SlangForm>({
+  } = useForm<SlangFormSchema>({
     defaultValues,
     resolver: zodResolver(newSlangSchema)
   })
@@ -39,13 +40,12 @@ export function SlangForm({ defaultValues }: Props) {
   // Create inline loading UI
   // const isMutating = isFetching || isPending
 
-  const onSubmit: SubmitHandler<SlangForm> = async (data) => {
+  const { mutateAsync } = api.slang.create.useMutation()
+
+  const onSubmit: SubmitHandler<SlangFormSchema> = async (data) => {
     // setIsFetching(true)
     console.log(data)
-    await fetch(`/api/post/new`, {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
+    await mutateAsync(data)
     // setIsFetching(false)
 
     // startTransition(() => {

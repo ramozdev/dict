@@ -1,21 +1,25 @@
 import Link from 'next/link'
-import type { SlangApi } from '@/types'
 import { Card } from '@/components/ui/card'
+import type { ParsedSlangForClient } from '@/lib/parse-slang-for-client'
 
-type Props = SlangApi
+type Props = {
+  slang: ParsedSlangForClient
+}
 
 export function DefinitionCard({
-  synonyms,
-  antonyms,
-  spellings,
-  abbreviations,
-  definitions,
-  slang,
-  tags,
-  explicit,
-  updatedAt,
-  augmentative,
-  diminutive
+  slang: {
+    synonyms,
+    antonyms,
+    spellings,
+    abbreviations,
+    definitions,
+    slang,
+    tags,
+    explicit,
+    updatedAt,
+    augmentative,
+    diminutive
+  }
 }: Props) {
   const updatedAtString = new Date(updatedAt).toLocaleDateString(undefined, {
     year: 'numeric',

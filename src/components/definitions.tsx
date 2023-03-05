@@ -12,7 +12,7 @@ import { InputWrapper } from '@/components/ui/input-wrapper'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { TextArea } from '@/components/ui/textarea'
-import type { SlangForm } from '@/lib/validations/slang'
+import type { SlangFormSchema } from '@/lib/validations/slang'
 import type { Pos } from '@prisma/client'
 
 export function Examples({
@@ -20,8 +20,8 @@ export function Examples({
   register,
   nestIndex
 }: {
-  control: Control<SlangForm>
-  register: UseFormRegister<SlangForm>
+  control: Control<SlangFormSchema>
+  register: UseFormRegister<SlangFormSchema>
   nestIndex: number
 }) {
   const { fields, append } = useFieldArray({
@@ -60,7 +60,7 @@ function Definition({
   index,
   setValue
 }: { field: FieldArrayWithId; index: number } & Pick<
-  UseFormReturn<SlangForm>,
+  UseFormReturn<SlangFormSchema>,
   'control' | 'register' | 'setValue'
 >) {
   const pos = useWatch({
@@ -130,7 +130,7 @@ export function Definitions({
   control,
   register,
   setValue
-}: Pick<UseFormReturn<SlangForm>, 'control' | 'register' | 'setValue'>) {
+}: Pick<UseFormReturn<SlangFormSchema>, 'control' | 'register' | 'setValue'>) {
   const { fields, append } = useFieldArray({
     control,
     name: `definitions`
@@ -145,6 +145,7 @@ export function Definitions({
         onClick={(e) => {
           e.preventDefault()
           append({
+            id: '',
             definition: '',
             pos: 'adjective',
             examples: [],

@@ -10,46 +10,30 @@ export const pos = [
   'noun',
   'preposition',
   'pronoun',
-  'verb',
+  'verb'
 ] as const
 
 export const slangSchema = z.object({
-  id: z.string().cuid().optional(),
+  id: z.string().cuid(),
   slang: z.string().min(1),
-  spellings: z
-    .array(z.object({ spelling: z.string().min(1), id: z.string().optional() }))
-    .optional(),
-  synonyms: z
-    .array(z.object({ synonym: z.string().min(1), id: z.string().optional() }))
-    .optional(),
-  antonyms: z
-    .array(z.object({ antonym: z.string().min(1), id: z.string().optional() }))
-    .optional(),
-  abbreviations: z
-    .array(
-      z.object({ abbreviation: z.string().min(1), id: z.string().optional() })
-    )
-    .optional(),
-  tags: z
-    .array(z.object({ tag: z.string().min(1), id: z.string().optional() }))
-    .optional(),
-  diminutive: z.string().nullable(),
-  augmentative: z.string().nullable(),
+  spellings: z.array(z.object({ spelling: z.string(), id: z.string().optional() })),
+  synonyms: z.array(z.object({ synonym: z.string(), id: z.string().optional() })),
+  antonyms: z.array(z.object({ antonym: z.string(), id: z.string().optional() })),
+  abbreviations: z.array(z.object({ abbreviation: z.string(), id: z.string().optional() })),
+  tags: z.array(z.object({ tag: z.string(), id: z.string().optional() })),
+  diminutive: z.string(),
+  augmentative: z.string(),
   explicit: z.boolean(),
   definitions: z.array(
     z.object({
       definition: z.string().min(1),
-      idiom: z.string().nullable(),
+      idiom: z.string(),
       pos: z.enum(pos),
-      examples: z
-        .array(
-          z.object({ example: z.string().min(1), id: z.string().optional() })
-        )
-        .optional(),
-      id: z.string().optional(),
+      examples: z.array(z.object({ example: z.string().min(1), id: z.string().optional() })),
+      id: z.string()
     })
   ),
-  authorId: z.string().min(1),
+  authorId: z.string().min(1)
 })
 
-export type SlangForm = z.infer<typeof slangSchema>
+export type SlangFormSchema = z.infer<typeof slangSchema>

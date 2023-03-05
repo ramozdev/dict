@@ -1,15 +1,16 @@
+import { DefinitionCard } from '@/components/definition-card'
 import Layout from '@/components/layout'
+import { type ParsedSlangForClient, parseSlangForClient } from '@/lib/parse-slang-for-client'
 import { prisma } from '@/server/db'
-import type { SlangApi } from '@/types'
 
 type Props = {
-  slang: SlangApi
+  slang: ParsedSlangForClient
 }
 
 export default function SlangPage({ slang }: Props) {
   return (
     <Layout>
-      <pre>{JSON.stringify(slang, null, 2)}</pre>
+      <DefinitionCard slang={slang} />
     </Layout>
   )
 }
@@ -61,41 +62,7 @@ export const getStaticProps = async ({ params }: { params: { slug: string } }) =
 
   if (!payload) throw new Error('No data found')
 
-  const {
-    abbreviations,
-    antonyms,
-    definitions,
-    spellings,
-    synonyms,
-    tags,
-    createdAt,
-    updatedAt,
-    ...data
-  } = payload
-
-  const result = {
-    ...data,
-    createdAt: createdAt.toISOString(),
-    updatedAt: updatedAt.toISOString(),
-    abbreviations: abbreviations.map(({ abbreviation }) => abbreviation),
-    antonyms: antonyms.map(({ antonym }) => antonym),
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce#grouping_objects_by_a_property
-    definitions: definitions.reduce<SlangApi['definitions']>((acc, obj) => {
-      const curGroup = acc[obj.pos] ?? []
-
-      // exclude pos and parse examples
-      const parsedObj = {
-        examples: obj.examples,
-        definition: obj.definition,
-        idiom: obj.idiom
-      }
-
-      return { ...acc, [obj.pos]: [...curGroup, parsedObj] }
-    }, {}),
-    spellings: spellings.map(({ spelling }) => spelling),
-    synonyms: synonyms.map(({ synonym }) => synonym),
-    tags: tags.map(({ tag }) => tag)
-  }
+  const result = parseSlangForClient(payload)
 
   return {
     props: {

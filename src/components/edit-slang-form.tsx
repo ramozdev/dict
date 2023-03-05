@@ -12,17 +12,19 @@ import { Antonyms } from '@/components/antonyms'
 import { Synonyms } from '@/components/synonyms'
 import { Tags } from '@/components/tags'
 import { Definitions } from '@/components/definitions'
-import { type SlangForm, slangSchema } from '@/lib/validations/slang'
+import { type SlangFormSchema, slangSchema } from '@/lib/validations/slang'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '@/utils/api'
+import { parseSlangForPrisma } from '@/lib/parse-slang-for-prisma'
 
 type Props = {
-  defaultValues?: SlangForm
+  defaultValues?: SlangFormSchema
   userId: string
   slangId: string
 }
 
-export function EditSlangForm({ defaultValues, slangId, userId }: Props) {
-  const { register, handleSubmit, setValue, control } = useForm<SlangForm>({
+export function EditSlangForm({ defaultValues }: Props) {
+  const { register, handleSubmit, setValue, control } = useForm<SlangFormSchema>({
     defaultValues,
     resolver: zodResolver(slangSchema)
   })
@@ -34,12 +36,12 @@ export function EditSlangForm({ defaultValues, slangId, userId }: Props) {
   // Create inline loading UI
   // const isMutating = isFetching || isPending
 
-  const onSubmit: SubmitHandler<SlangForm> = async (data) => {
+  const { mutateAsync } = api.slang.update.useMutation()
+
+  const onSubmit: SubmitHandler<SlangFormSchema> = async (data) => {
     // setIsFetching(true)
-    await fetch(`/api/patch/slang?userId=${userId}&slangId=${slangId}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data)
-    })
+    const parsedData = parseSlangForPrisma(data)
+    await mutateAsync(parsedData)
     // setIsFetching(false)
 
     // startTransition(() => {
@@ -49,7 +51,7 @@ export function EditSlangForm({ defaultValues, slangId, userId }: Props) {
     // })
   }
   return (
-    <form onSubmit={() => handleSubmit(onSubmit)} className="container mx-auto">
+    <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto">
       <fieldset>
         <legend>Slang</legend>
 

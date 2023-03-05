@@ -1,27 +1,6 @@
 import { pos } from '@/lib/validations/slang'
 import * as z from 'zod'
 
-export type SlangApi = {
-  abbreviations: string[]
-  antonyms: string[]
-  definitions: {
-    [key: string]: {
-      idiom: string | null
-      definition: string
-      examples: { example: string }[]
-    }[]
-  }
-  spellings: string[]
-  synonyms: string[]
-  tags: string[]
-  slang: string
-  createdAt: string
-  explicit: boolean
-  updatedAt: string
-  augmentative: string | null
-  diminutive: string | null
-}
-
 const defintionSchema = z.array(
   z.object({
     idiom: z.string().optional(),

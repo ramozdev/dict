@@ -3,14 +3,14 @@ import { InputWrapper } from '@/components/ui/input-wrapper'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import type { SlangForm } from '@/lib/validations/slang'
+import type { SlangFormSchema } from '@/lib/validations/slang'
 
 export function Spellings({
   control,
   register
 }: {
-  control: Control<SlangForm>
-  register: UseFormRegister<SlangForm>
+  control: Control<SlangFormSchema>
+  register: UseFormRegister<SlangFormSchema>
 }) {
   const { fields, append } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)

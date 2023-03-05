@@ -13,6 +13,12 @@ export default function NewPage({ user }: Props) {
     <Layout>
       <SlangForm
         defaultValues={{
+          abbreviations: [],
+          antonyms: [],
+          id: '',
+          spellings: [],
+          synonyms: [],
+          tags: [],
           authorId: user.id,
           augmentative: '',
           diminutive: '',
@@ -20,8 +26,9 @@ export default function NewPage({ user }: Props) {
             {
               definition: '',
               examples: [],
-              pos: 'noun',
-              idiom: ''
+              id: '',
+              idiom: '',
+              pos: 'noun'
             }
           ],
           explicit: false,

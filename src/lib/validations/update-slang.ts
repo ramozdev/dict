@@ -1,4 +1,4 @@
-import * as z from 'zod'
+import { z } from 'zod'
 
 export const pos = [
   'adjective',
@@ -13,7 +13,8 @@ export const pos = [
   'verb'
 ] as const
 
-export const newSlangSchema = z.object({
+export const updateSlangSchema = z.object({
+  id: z.string().cuid(),
   slang: z.string().min(1).max(191),
   spellings: z.array(z.object({ spelling: z.string().min(1) })),
   synonyms: z.array(z.object({ synonym: z.string().min(1) })),
@@ -34,5 +35,3 @@ export const newSlangSchema = z.object({
   ),
   authorId: z.string().min(1).cuid()
 })
-
-export type NewSlangForm = z.infer<typeof newSlangSchema>
