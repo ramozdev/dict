@@ -4,13 +4,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { SlangFormSchema } from '@/lib/validations/slang'
+import { TrashIcon } from '@radix-ui/react-icons'
 
 export function Spellings({
   control,
-  register
+  register,
+  editableValues
 }: {
   control: Control<SlangFormSchema>
   register: UseFormRegister<SlangFormSchema>
+  editableValues?: { spelling: string; id: string }[]
 }) {
   const { fields, append } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -19,20 +22,31 @@ export function Spellings({
   return (
     <div>
       <InputWrapper>
-        <Label htmlFor="spellings">Spellings</Label>
-        {fields.map((field, index) => (
-          <Input id="spellings" key={field.id} {...register(`spellings.${index}.spelling`)} />
-        ))}
+        <div className="flex gap-3 items-center mb-3">
+          <Label htmlFor="spellings">Spellings</Label>
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              append({ spelling: '', id: '' })
+            }}
+          >
+            append
+          </Button>
+        </div>
+        <div className="grid gap-3">
+          {editableValues?.map(({ spelling, id }) => (
+            <div key={id} className="flex gap-3 items-center">
+              <Input disabled value={spelling} />
+              <Button>
+                <TrashIcon />
+              </Button>
+            </div>
+          ))}
+          {fields.map((field, index) => (
+            <Input id="spellings" key={field.id} {...register(`spellings.${index}.spelling`)} />
+          ))}
+        </div>
       </InputWrapper>
-
-      <Button
-        onClick={(e) => {
-          e.preventDefault()
-          append({ spelling: '' })
-        }}
-      >
-        append
-      </Button>
     </div>
   )
 }

@@ -4,13 +4,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { SlangFormSchema } from '@/lib/validations/slang'
+import { TrashIcon } from '@radix-ui/react-icons'
 
 export function Synonyms({
   control,
-  register
+  register,
+  editableValues
 }: {
   control: Control<SlangFormSchema>
   register: UseFormRegister<SlangFormSchema>
+  editableValues?: { synonym: string; id: string }[]
 }) {
   const { fields, append } = useFieldArray({
     control, // control props comes from useForm (optional: if you are using FormContext)
@@ -19,20 +22,32 @@ export function Synonyms({
   return (
     <div>
       <InputWrapper>
-        <Label htmlFor="synonyms">Synonyms</Label>
-        {fields.map((field, index) => (
-          <Input id="synonyms" key={field.id} {...register(`synonyms.${index}.synonym`)} />
-        ))}
-      </InputWrapper>
+        <div className="flex gap-3 items-center mb-3">
+          <Label htmlFor="synonyms">Synonyms</Label>
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              append({ synonym: '', id: '' })
+            }}
+          >
+            append
+          </Button>
+        </div>
 
-      <Button
-        onClick={(e) => {
-          e.preventDefault()
-          append({ synonym: '' })
-        }}
-      >
-        append
-      </Button>
+        <div className="grid gap-3">
+          {editableValues?.map(({ synonym, id }) => (
+            <div key={id} className="flex gap-3 items-center">
+              <Input disabled value={synonym} />
+              <Button>
+                <TrashIcon />
+              </Button>
+            </div>
+          ))}
+          {fields.map((field, index) => (
+            <Input id="synonyms" key={field.id} {...register(`synonyms.${index}.synonym`)} />
+          ))}
+        </div>
+      </InputWrapper>
     </div>
   )
 }

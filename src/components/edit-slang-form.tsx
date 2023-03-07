@@ -4,7 +4,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { InputWrapper } from '@/components/ui/input-wrapper'
 import { useForm, type SubmitHandler } from 'react-hook-form'
-// import { useRouter } from 'next/navigation'
 // import { useState, useTransition } from 'react'
 import { Spellings } from '@/components/spellings'
 import { Abbreviations } from '@/components/abbreviations'
@@ -16,6 +15,7 @@ import { type SlangFormSchema, slangSchema } from '@/lib/validations/slang'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '@/utils/api'
 import { parseSlangForPrisma } from '@/lib/parse-slang-for-prisma'
+import { useRouter } from 'next/router'
 
 type Props = {
   defaultValues?: SlangFormSchema
@@ -25,11 +25,19 @@ type Props = {
 
 export function EditSlangForm({ defaultValues }: Props) {
   const { register, handleSubmit, setValue, control } = useForm<SlangFormSchema>({
-    defaultValues,
+    defaultValues: {
+      id: defaultValues?.id,
+      slang: defaultValues?.slang,
+      explicit: defaultValues?.explicit,
+      diminutive: defaultValues?.diminutive,
+      augmentative: defaultValues?.augmentative,
+      definitions: defaultValues?.definitions,
+      authorId: defaultValues?.authorId
+    },
     resolver: zodResolver(slangSchema)
   })
 
-  // const router = useRouter()
+  const router = useRouter()
   // const [isPending, startTransition] = useTransition()
   // const [isFetching, setIsFetching] = useState(false)
 
@@ -41,7 +49,8 @@ export function EditSlangForm({ defaultValues }: Props) {
   const onSubmit: SubmitHandler<SlangFormSchema> = async (data) => {
     // setIsFetching(true)
     const parsedData = parseSlangForPrisma(data)
-    await mutateAsync(parsedData)
+    const res = await mutateAsync(parsedData)
+    await router.push(`/${res.slug}`)
     // setIsFetching(false)
 
     // startTransition(() => {
@@ -66,13 +75,13 @@ export function EditSlangForm({ defaultValues }: Props) {
           <Label htmlFor="slang">Slang</Label>
           <Input className="input" id="slang" {...register('slang')} />
         </InputWrapper>
-        <Spellings {...{ control, register }} />
+        <Spellings {...{ control, register }} editableValues={defaultValues?.spellings} />
       </fieldset>
 
-      <Abbreviations {...{ control, register }} />
-      <Synonyms {...{ control, register }} />
-      <Antonyms {...{ control, register }} />
-      <Tags {...{ control, register }} />
+      <Abbreviations {...{ control, register }} editableValues={defaultValues?.abbreviations} />
+      <Synonyms {...{ control, register }} editableValues={defaultValues?.synonyms} />
+      <Antonyms {...{ control, register }} editableValues={defaultValues?.antonyms} />
+      <Tags {...{ control, register }} editableValues={defaultValues?.tags} />
 
       <fieldset>
         <legend>Sufijos</legend>

@@ -66,7 +66,10 @@ export const slangRouter = createTRPCRouter({
               }))
             },
             spellings: {
-              create: spellings
+              connectOrCreate: spellings?.map(({ spelling }) => ({
+                create: { spelling },
+                where: { spelling }
+              }))
             },
             synonyms: {
               connectOrCreate: synonyms?.map(({ synonym }) => ({
@@ -77,7 +80,7 @@ export const slangRouter = createTRPCRouter({
             tags: {
               connectOrCreate: tags?.map(({ tag }) => ({
                 create: { tag },
-                where: { id: id ?? '' }
+                where: { tag }
               }))
             }
           }

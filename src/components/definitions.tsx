@@ -44,7 +44,7 @@ export function Examples({
       <Button
         onClick={(e) => {
           e.preventDefault()
-          append({ example: '' })
+          append({ example: '', id: '' })
         }}
       >
         append

@@ -63,7 +63,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
     }
   })
 
-  if (!payload) throw new Error('No data found')
+  if (!payload) {
+    return {
+      notFound: true
+    }
+  }
 
   const result = parseSlangForEdit(payload)
 
