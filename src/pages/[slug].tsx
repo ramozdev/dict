@@ -60,7 +60,11 @@ export const getStaticProps = async ({ params }: { params: { slug: string } }) =
     }
   })
 
-  if (!payload) throw new Error('No data found')
+  if (!payload) {
+    return {
+      notFound: true
+    }
+  }
 
   const result = parseSlangForClient(payload)
 

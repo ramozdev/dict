@@ -108,8 +108,6 @@ export const getStaticProps = async () => {
     }
   })
 
-  if (!payload) throw new Error('No data found')
-
   const result = parseManySlangs(payload)
 
   return {
