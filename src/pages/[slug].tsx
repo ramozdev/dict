@@ -1,5 +1,5 @@
 import { DefinitionCard } from '@/components/definition-card'
-import Layout from '@/components/layout'
+import { Layout } from '@/components/layout'
 import { type ParsedSlangForClient, parseSlangForClient } from '@/lib/parse-slang-for-client'
 import { prisma } from '@/server/db'
 

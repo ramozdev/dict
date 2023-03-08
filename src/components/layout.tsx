@@ -1,9 +1,8 @@
-import type { FC, PropsWithChildren } from 'react'
 import { NavBar } from '@/components/navbar'
 import { Shell } from '@/components/shell'
 import { SideBar } from '@/components/sidebar'
 
-const Layout: FC<PropsWithChildren> = ({ children }) => {
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Shell>
       <SideBar />
@@ -14,5 +13,3 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
     </Shell>
   )
 }
-
-export default Layout

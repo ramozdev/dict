@@ -4,7 +4,7 @@ import { getServerSession, type Session } from 'next-auth'
 
 import { authOptions } from '@/server/auth'
 import type { GetServerSideProps } from 'next'
-import Layout from '@/components/layout'
+import { Layout } from '@/components/layout'
 import { type ParsedSlangForEdit, parseSlangForEdit } from '@/lib/parse-slang-for-edit'
 
 type Props = {

@@ -1,4 +1,4 @@
-import Layout from '@/components/layout'
+import { Layout } from '@/components/layout'
 import { SlangForm } from '@/components/new-slang-form'
 import { authOptions } from '@/server/auth'
 import type { GetServerSideProps } from 'next'
