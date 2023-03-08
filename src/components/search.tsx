@@ -5,8 +5,13 @@ import { useDebounce } from 'use-debounce'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card } from '@/components/ui/card'
+import type { ParsedSlangForClient } from '@/lib/parse-slang-for-client'
 
-export function Search() {
+type Props = {
+  trending?: ParsedSlangForClient[]
+}
+
+export function Search({ trending }: Props) {
   const { register, watch } = useForm({
     defaultValues: { search: '' }
   })
@@ -30,14 +35,31 @@ export function Search() {
         {...register('search')}
       />
 
-      {data && data.length > 0 && (
-        <ScrollArea className="rounded-md gap-y-2 grid">
-          {data.map(({ slang, slug }) => (
-            <Link key={slang} className="bg-blue-500" href={`/${slug}`}>
-              <Card>{slang}</Card>
-            </Link>
-          ))}
-        </ScrollArea>
+      {debouncedText.length > 2 ? (
+        <div className="rounded-md gap-y-2 grid">
+          {data && data.length > 0 && (
+            <ScrollArea className="rounded-md gap-y-2 grid">
+              {data.map(({ slang, slug }) => (
+                <Link key={slang} className="bg-blue-500" href={`/${slug}`}>
+                  <Card>{slang}</Card>
+                </Link>
+              ))}
+            </ScrollArea>
+          )}
+        </div>
+      ) : (
+        !!trending && (
+          <div>
+            <h2 className="text-xl font-bold">Trending</h2>
+            <div className="rounded-md gap-y-2 grid">
+              {trending?.map(({ slang, slug }) => (
+                <Link key={slug} href={`/${slug}`}>
+                  {slang}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )
       )}
     </div>
   )

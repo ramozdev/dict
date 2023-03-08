@@ -70,7 +70,7 @@ type Props = {
 
 export default function Home({ slangs }: Props) {
   return (
-    <Layout>
+    <Layout trending={slangs}>
       {slangs.map((slang) => (
         <DefinitionCard key={slang.id} slang={slang} />
       ))}

@@ -1,11 +1,17 @@
 import { NavBar } from '@/components/navbar'
 import { Shell } from '@/components/shell'
 import { SideBar } from '@/components/sidebar'
+import type { ParsedSlangForClient } from '@/lib/parse-slang-for-client'
 
-export function Layout({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode
+  trending?: ParsedSlangForClient[]
+}
+
+export function Layout({ children, trending }: Props) {
   return (
     <Shell>
-      <SideBar />
+      <SideBar trending={trending} />
       <div>
         <NavBar />
         <main className="container mx-auto px-3 lg:px-0">{children}</main>
