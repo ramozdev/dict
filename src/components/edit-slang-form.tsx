@@ -73,7 +73,7 @@ export function EditSlangForm({ defaultValues }: Props) {
         <Label htmlFor="explicit">Explicit</Label>
         <InputWrapper>
           <Label htmlFor="slang">Slang</Label>
-          <Input className="input" id="slang" {...register('slang')} />
+          <Input className="input" id="slang" disabled {...register('slang')} />
         </InputWrapper>
         <Spellings {...{ control, register }} editableValues={defaultValues?.spellings} />
       </fieldset>

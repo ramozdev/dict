@@ -25,7 +25,7 @@ export function Search() {
       <Input
         className="w-full mb-3 mt-1"
         type="text"
-        placeholder="Buscar jerga"
+        placeholder="Search"
         autoComplete="off"
         {...register('search')}
       />

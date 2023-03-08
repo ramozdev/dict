@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { SlangFormSchema } from '@/lib/validations/slang'
-import { TrashIcon } from '@radix-ui/react-icons'
+import { PlusIcon, TrashIcon } from '@radix-ui/react-icons'
 
 export function Abbreviations({
   control,
@@ -31,7 +31,7 @@ export function Abbreviations({
               append({ abbreviation: '', id: '' })
             }}
           >
-            append
+            <PlusIcon />
           </Button>
         </div>
         <div className="grid gap-3">

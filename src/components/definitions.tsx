@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { TextArea } from '@/components/ui/textarea'
 import type { SlangFormSchema } from '@/lib/validations/slang'
 import type { Pos } from '@prisma/client'
+import { PlusIcon } from '@radix-ui/react-icons'
 
 export function Examples({
   control,
@@ -29,7 +30,18 @@ export function Examples({
     name: `definitions.${nestIndex}.examples`
   })
   return (
-    <>
+    <InputWrapper>
+      <div className="flex gap-3 items-center mb-3">
+        <Label htmlFor="example">Ejemplos</Label>
+        <Button
+          onClick={(e) => {
+            e.preventDefault()
+            append({ example: '', id: '' })
+          }}
+        >
+          <PlusIcon />
+        </Button>
+      </div>
       {fields.map((field, k) => (
         <TextArea
           key={field.id}
@@ -40,16 +52,7 @@ export function Examples({
           placeholder="example"
         />
       ))}
-
-      <Button
-        onClick={(e) => {
-          e.preventDefault()
-          append({ example: '', id: '' })
-        }}
-      >
-        append
-      </Button>
-    </>
+    </InputWrapper>
   )
 }
 
@@ -118,10 +121,7 @@ function Definition({
           placeholder="definition"
         />
       </InputWrapper>
-      <InputWrapper>
-        <Label htmlFor="example">Ejemplos</Label>
-        <Examples {...{ control, register, nestIndex: index }} />
-      </InputWrapper>
+      <Examples {...{ control, register, nestIndex: index }} />
     </Fragment>
   )
 }
