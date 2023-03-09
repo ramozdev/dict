@@ -1,15 +1,15 @@
 import { signIn, signOut } from 'next-auth/react'
-import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import { CommandDialogDemo } from './search'
 
 export function NavBar() {
   const { data } = useSession()
   return (
-    <nav className="p-2 bg-black">
-      <ul className="flex justify-between max-w-screen-lg mx-auto">
-        <li className="font-mono">Slict</li>
+    <nav className="p-4 bg-black mb-4">
+      <ul className="flex items-center justify-between max-w-screen-xl mx-auto">
+        <li className="font-mono">Slangz</li>
         <li>
-          <Link href="/">Home</Link>
+          <CommandDialogDemo />
         </li>
         <li>
           {!!data ? (

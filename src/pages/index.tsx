@@ -2,6 +2,7 @@ import { DefinitionCard } from '@/components/definition-card'
 import { Layout } from '@/components/layout'
 import { type ParsedSlangForClient, parseManySlangs } from '@/lib/parse-slang-for-client'
 import { prisma } from '@/server/db'
+import Link from 'next/link'
 
 // const mockData = {
 //   abbreviations: ['abbr', 'abbrv'],
@@ -69,11 +70,25 @@ type Props = {
 }
 
 export default function Home({ slangs }: Props) {
+  const [featuredSlang] = slangs
   return (
-    <Layout trending={slangs}>
-      {slangs.map((slang) => (
-        <DefinitionCard key={slang.id} slang={slang} />
-      ))}
+    <Layout>
+      <div className="grid justify-end md:grid-cols-2 gap-6 md:gap-12">
+        <div>
+          <header className="text-xl font-bold mb-4">Featured</header>
+          <div>{featuredSlang && <DefinitionCard slang={featuredSlang} />}</div>
+        </div>
+        <div>
+          <header className="text-xl font-bold mb-4">Trending</header>
+          <ol>
+            {slangs.map(({ slang, slug, id }) => (
+              <li className="list-decimal py-2 mb-2" key={id}>
+                <Link href={`/${slug}`}>{slang}</Link>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
     </Layout>
   )
 }

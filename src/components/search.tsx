@@ -1,17 +1,20 @@
-import { api } from '@/utils/api'
-import Link from 'next/link'
+import * as React from 'react'
+
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command'
 import { useForm } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
-import { Input } from '@/components/ui/input'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { api } from '@/utils/api'
 import { Card } from '@/components/ui/card'
-import type { ParsedSlangForClient } from '@/lib/parse-slang-for-client'
+import Link from 'next/link'
+import { Input } from './ui/input'
 
-type Props = {
-  trending?: ParsedSlangForClient[]
-}
-
-export function Search({ trending }: Props) {
+export function CommandDialogDemo() {
   const { register, watch } = useForm({
     defaultValues: { search: '' }
   })
@@ -24,43 +27,69 @@ export function Search({ trending }: Props) {
       enabled: debouncedText.length > 2
     }
   )
+  const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'k' && e.metaKey) {
+        setOpen((open) => !open)
+      }
+    }
+
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
 
   return (
-    <div className="h-screen overflow-auto px-1">
-      <Input
-        className="w-full mb-3 mt-1"
-        type="text"
-        placeholder="Search"
-        autoComplete="off"
-        {...register('search')}
-      />
-
-      {debouncedText.length > 2 ? (
-        <div className="rounded-md gap-y-2 grid">
-          {data && data.length > 0 && (
-            <ScrollArea className="rounded-md gap-y-2 grid">
-              {data.map(({ slang, slug }) => (
-                <Link key={slang} className="bg-blue-500" href={`/${slug}`}>
-                  <Card>{slang}</Card>
-                </Link>
+    <>
+      <button
+        type="button"
+        className="flex min-w-[200px] md:min-w-[400px] justify-between items-center appearance-none rounded-md bg-white
+        px-4 py-2 text-neutral-900 ring-1
+        ring-neutral-300
+        transition
+        duration-100
+        hover:ring-neutral-500 
+        focus:outline-none 
+        focus:ring-neutral-500
+        focus-visible:ring-neutral-500 
+        disabled:cursor-not-allowed 
+        disabled:bg-neutral-50
+        disabled:text-neutral-600 
+        disabled:ring-neutral-200 
+        dark:bg-black
+        dark:text-neutral-200 
+        dark:ring-neutral-800 
+        dark:[color-scheme:dark] 
+        dark:hover:bg-black 
+        dark:hover:ring-neutral-600	
+        dark:hover:invalid:ring-red-800 
+        dark:focus:ring-neutral-600 
+        dark:focus:invalid:ring-red-800 
+        dark:focus-visible:ring-neutral-600"
+        onClick={() => setOpen((open) => !open)}
+      >
+        <p>Search</p>
+        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-slate-100 bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-600 opacity-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+          <span className="text-xs">⌘</span>K
+        </kbd>
+      </button>
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <Input placeholder="Search" autoComplete="off" {...register('search')} />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Results">
+            {data &&
+              data.map(({ slang, slug }) => (
+                <CommandItem key={slang}>
+                  <Link className="bg-blue-500" href={`/${slug}`}>
+                    <Card>{slang}</Card>
+                  </Link>
+                </CommandItem>
               ))}
-            </ScrollArea>
-          )}
-        </div>
-      ) : (
-        !!trending && (
-          <div>
-            <h2 className="text-xl font-bold">Trending</h2>
-            <div className="rounded-md gap-y-2 grid">
-              {trending?.map(({ slang, slug }) => (
-                <Link key={slug} href={`/${slug}`}>
-                  {slang}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )
-      )}
-    </div>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+    </>
   )
 }
