@@ -10,9 +10,10 @@ import {
 import { useForm } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
 import { api } from '@/utils/api'
-import { Card } from '@/components/ui/card'
+// import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import { Input } from './ui/input'
+import { CommandLoading } from 'cmdk'
 
 export function CommandDialogDemo() {
   const { register, watch } = useForm({
@@ -21,7 +22,7 @@ export function CommandDialogDemo() {
   const searchText = watch('search')
   const [debouncedText] = useDebounce(searchText, 500)
 
-  const { data } = api.search.slang.useQuery(
+  const { data, isFetching } = api.search.slang.useQuery(
     { slang: debouncedText },
     {
       enabled: debouncedText.length > 2
@@ -76,19 +77,32 @@ export function CommandDialogDemo() {
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Input placeholder="Search" autoComplete="off" {...register('search')} />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Results">
-            {data &&
-              data.map(({ slang, slug }) => (
-                <CommandItem key={slang}>
-                  <Link className="bg-blue-500" href={`/${slug}`}>
-                    <Card>{slang}</Card>
-                  </Link>
-                </CommandItem>
-              ))}
-          </CommandGroup>
-        </CommandList>
+        {isFetching && <CommandLoading>Loading...</CommandLoading>}
+        {!!data ? (
+          data.length === 0 ? (
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+            </CommandList>
+          ) : (
+            <CommandList>
+              <CommandGroup heading="Results">
+                {data.map(({ slang, slug }) => (
+                  <CommandItem key={slang}>
+                    <Link className="bg-blue-500" href={`/${slug}`}>
+                      {slang}
+                    </Link>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          )
+        ) : (
+          <CommandList>
+            <CommandGroup heading="Trending">
+              <CommandItem>Slang 1</CommandItem>
+            </CommandGroup>
+          </CommandList>
+        )}
       </CommandDialog>
     </>
   )
