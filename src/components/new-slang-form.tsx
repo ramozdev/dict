@@ -14,14 +14,17 @@ import { Tags } from '@/components/tags'
 import { Definitions } from '@/components/definitions'
 import type { SlangFormSchema } from '@/lib/validations/slang'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { newSlangSchema } from '@/lib/validations/new-slang'
+import { type NewSlangForm, newSlangSchema } from '@/lib/validations/new-slang'
 import { api } from '@/utils/api'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 type Props = {
-  defaultValues?: SlangFormSchema
+  defaultValues?: NewSlangForm
 }
 
 export function SlangForm({ defaultValues }: Props) {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -33,27 +36,21 @@ export function SlangForm({ defaultValues }: Props) {
     resolver: zodResolver(newSlangSchema)
   })
 
-  // const router = useRouter()
-  // const [isPending, startTransition] = useTransition()
-  // const [isFetching, setIsFetching] = useState(false)
-
-  // Create inline loading UI
-  // const isMutating = isFetching || isPending
+  const [isFetching, setIsFetching] = useState(false)
 
   const { mutateAsync } = api.slang.create.useMutation()
 
   const onSubmit: SubmitHandler<SlangFormSchema> = async (data) => {
-    // setIsFetching(true)
-    console.log(data)
-    await mutateAsync(data)
-    // setIsFetching(false)
-
-    // startTransition(() => {
-    // Refresh the current route and fetch new data from the server without
-    // losing client-side browser or React state.
-    // router.refresh()
-    // })
+    setIsFetching(true)
+    try {
+      const res = await mutateAsync(data)
+      await router.push(`/${res.slug}`)
+    } catch (error) {
+      console.error(error)
+    }
+    setIsFetching(false)
   }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto max-w-prose mb-8">
       <fieldset>
@@ -91,18 +88,20 @@ export function SlangForm({ defaultValues }: Props) {
             Diminutivo
           </Label>
           <Input id="diminutive" {...register('diminutive')} />
+          {errors.diminutive && <span>{errors.diminutive.message}</span>}
         </InputWrapper>
         <InputWrapper>
           <Label htmlFor="augmentative" className="mb-2">
             Aumentativo
           </Label>
           <Input id="augmentative" {...register('augmentative')} />
+          {errors.augmentative && <span>{errors.augmentative.message}</span>}
         </InputWrapper>
       </fieldset>
 
       <Definitions {...{ control, register, handleSubmit, setValue }} />
 
-      <Button onClick={() => console.log({ errors })} className="w-full">
+      <Button disabled={isFetching} className="w-full">
         Submit
       </Button>
     </form>

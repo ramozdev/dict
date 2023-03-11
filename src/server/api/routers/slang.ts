@@ -111,44 +111,52 @@ export const slangRouter = createTRPCRouter({
             slang,
             slug: slugify(slang),
             explicit,
-            augmentative,
-            diminutive,
+            augmentative: augmentative.length > 0 ? augmentative : null,
+            diminutive: diminutive.length > 0 ? diminutive : null,
             definitions: {
               create: definitions?.map(({ definition, pos, examples, idiom }) => ({
                 definition,
                 pos,
                 examples: {
-                  create: examples
+                  create: examples.filter(({ example }) => example.length > 0)
                 },
-                idiom
+                idiom: idiom.length > 0 ? idiom : null
               }))
             },
             abbreviations: {
-              connectOrCreate: abbreviations.map(({ abbreviation }) => ({
-                create: { abbreviation },
-                where: { abbreviation }
-              }))
+              connectOrCreate: abbreviations
+                .filter(({ abbreviation }) => abbreviation.length > 0)
+                .map(({ abbreviation }) => ({
+                  create: { abbreviation },
+                  where: { abbreviation }
+                }))
             },
             antonyms: {
-              connectOrCreate: antonyms.map(({ antonym }) => ({
-                create: { antonym },
-                where: { antonym }
-              }))
+              connectOrCreate: antonyms
+                .filter(({ antonym }) => antonym.length > 0)
+                .map(({ antonym }) => ({
+                  create: { antonym },
+                  where: { antonym }
+                }))
             },
             spellings: {
-              create: spellings
+              create: spellings.filter(({ spelling }) => spelling.length > 0)
             },
             synonyms: {
-              connectOrCreate: synonyms.map(({ synonym }) => ({
-                create: { synonym },
-                where: { synonym }
-              }))
+              connectOrCreate: synonyms
+                .filter(({ synonym }) => synonym.length > 0)
+                .map(({ synonym }) => ({
+                  create: { synonym },
+                  where: { synonym }
+                }))
             },
             tags: {
-              connectOrCreate: tags.map(({ tag }) => ({
-                create: { tag },
-                where: { tag }
-              }))
+              connectOrCreate: tags
+                .filter(({ tag }) => tag.length > 0)
+                .map(({ tag }) => ({
+                  create: { tag },
+                  where: { tag }
+                }))
             },
             author: { connect: { id: authorId } }
           }

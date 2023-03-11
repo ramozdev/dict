@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import type { ParsedSlangForClient } from '@/lib/parse-slang-for-client'
+import slugify from 'sluga'
 
 type Props = {
   slang: ParsedSlangForClient
@@ -116,7 +117,7 @@ export function DefinitionCard({
 
           <div className="flex gap-x-2">
             {synonyms.map((synonym) => (
-              <Link key={synonym} href={`/define/${synonym}`} className="">
+              <Link key={synonym} href={`/${slugify(synonym)}`} className="">
                 {synonym}
               </Link>
             ))}
@@ -131,7 +132,7 @@ export function DefinitionCard({
 
           <div className="flex gap-x-2">
             {antonyms.map((antonym) => (
-              <Link key={antonym} href={`/define/${antonym}`} className="">
+              <Link key={antonym} href={`/${slugify(antonym)}`} className="">
                 {antonym}
               </Link>
             ))}

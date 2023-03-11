@@ -15,7 +15,6 @@ export default function NewPage({ user }: Props) {
         defaultValues={{
           abbreviations: [],
           antonyms: [],
-          id: '',
           spellings: [],
           synonyms: [],
           tags: [],
@@ -26,7 +25,6 @@ export default function NewPage({ user }: Props) {
             {
               definition: '',
               examples: [],
-              id: '',
               idiom: '',
               pos: 'noun'
             }

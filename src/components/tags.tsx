@@ -35,13 +35,16 @@ export function Tags({
           </div>
         ))}
         {fields.map((field, index) => (
-          <Input
-            id="tags"
-            key={field.id}
-            autoComplete="off"
-            className="mb-4"
-            {...register(`tags.${index}.tag`)}
-          />
+          <>
+            <Input
+              id="tags"
+              key={field.id}
+              autoComplete="off"
+              className="mb-4"
+              {...register(`tags.${index}.tag`)}
+            />
+            {/* {errors.diminutive && <span>{errors.diminutive.message}</span>} */}
+          </>
         ))}
       </InputWrapper>
       <Button

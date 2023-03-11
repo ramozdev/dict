@@ -68,7 +68,7 @@ model VerificationToken {
 
 model Slang {
     id            String         @id @default(cuid())
-    slang         String         @unique
+    slang         String
     slug          String         @unique
     createdAt     DateTime       @default(now())
     updatedAt     DateTime       @updatedAt
@@ -93,7 +93,7 @@ model Slang {
 model Spelling {
     id       String @id @default(cuid())
     spelling String @unique
-    slang    Slang  @relation(fields: [slangId], references: [slang], onDelete: Cascade)
+    slang    Slang  @relation(fields: [slangId], references: [slug], onDelete: Cascade)
     slangId  String
 
     @@index([spelling, slangId])
@@ -141,7 +141,7 @@ model Definition {
     examples   Example[]
     idiom      String?
     pos        Pos
-    slang      Slang     @relation(fields: [slangId], references: [slang], onDelete: Cascade)
+    slang      Slang     @relation(fields: [slangId], references: [slug], onDelete: Cascade)
     slangId    String
 
     @@index([slangId])
