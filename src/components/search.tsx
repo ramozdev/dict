@@ -77,32 +77,30 @@ export function CommandDialogDemo() {
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Input placeholder="Search" autoComplete="off" {...register('search')} />
-        {isFetching && <CommandLoading>Loading...</CommandLoading>}
-        {!!data ? (
-          data.length === 0 ? (
-            <CommandList>
+
+        <CommandList>
+          {isFetching && <CommandLoading>Loading...</CommandLoading>}
+          {!!data ? (
+            data.length === 0 ? (
               <CommandEmpty>No results found.</CommandEmpty>
-            </CommandList>
-          ) : (
-            <CommandList>
+            ) : (
               <CommandGroup heading="Results">
                 {data.map(({ slang, slug }) => (
-                  <CommandItem key={slang}>
-                    <Link className="bg-blue-500" href={`/${slug}`}>
-                      {slang}
-                    </Link>
-                  </CommandItem>
+                  <Link key={slang} href={`/${slug}`}>
+                    <CommandItem>{slang}</CommandItem>
+                  </Link>
                 ))}
               </CommandGroup>
-            </CommandList>
-          )
-        ) : (
-          <CommandList>
+            )
+          ) : (
             <CommandGroup heading="Trending">
               <CommandItem>Slang 1</CommandItem>
+              <CommandItem disabled>Slang 2</CommandItem>
+              <CommandItem>Slang 3</CommandItem>
+              <CommandItem>Slang 4</CommandItem>
             </CommandGroup>
-          </CommandList>
-        )}
+          )}
+        </CommandList>
       </CommandDialog>
     </>
   )

@@ -21,37 +21,40 @@ export function Abbreviations({
   })
 
   return (
-    <div>
-      <InputWrapper>
-        <div className="flex gap-3 items-center mb-3">
-          <Label htmlFor="abbreviations">Abbreviations</Label>
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              append({ abbreviation: '', id: '' })
-            }}
-          >
-            <PlusIcon />
-          </Button>
-        </div>
-        <div className="grid gap-3">
-          {editableValues?.map(({ abbreviation, id }) => (
-            <div key={id} className="flex gap-3 items-center">
-              <Input disabled value={abbreviation} />
-              <Button>
-                <TrashIcon />
-              </Button>
-            </div>
-          ))}
-          {fields.map((field, index) => (
-            <Input
-              id="abbreviations"
-              key={field.id}
-              {...register(`abbreviations.${index}.abbreviation`)}
-            />
-          ))}
-        </div>
+    <div className="mb-4">
+      <InputWrapper className="mb-0">
+        <Label htmlFor="abbreviations" className="mb-2">
+          Abbreviations
+        </Label>
+
+        {editableValues?.map(({ abbreviation, id }) => (
+          <div key={id} className="flex mb-4 gap-3 items-center">
+            <Input disabled value={abbreviation} />
+            <Button>
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
+        {fields.map((field, index) => (
+          <Input
+            id="abbreviations"
+            key={field.id}
+            autoComplete="off"
+            className="mb-4"
+            {...register(`abbreviations.${index}.abbreviation`)}
+          />
+        ))}
       </InputWrapper>
+
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          append({ abbreviation: '', id: '' })
+        }}
+      >
+        <PlusIcon className="mr-2" />{' '}
+        {fields.length > 0 ? 'Add another abbreviation' : 'Add an abbreviation'}
+      </Button>
     </div>
   )
 }

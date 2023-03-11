@@ -20,33 +20,38 @@ export function Tags({
     name: `tags`
   })
   return (
-    <div>
-      <InputWrapper>
-        <div className="flex gap-3 items-center mb-3">
-          <Label htmlFor="tags">Tags</Label>
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              append({ tag: '', id: '' })
-            }}
-          >
-            <PlusIcon />
-          </Button>
-        </div>
-        <div className="grid gap-3">
-          {editableValues?.map(({ tag, id }) => (
-            <div key={id} className="flex gap-3 items-center">
-              <Input disabled value={tag} />
-              <Button>
-                <TrashIcon />
-              </Button>
-            </div>
-          ))}
-          {fields.map((field, index) => (
-            <Input id="tags" key={field.id} {...register(`tags.${index}.tag`)} />
-          ))}
-        </div>
+    <div className="mb-4">
+      <InputWrapper className="mb-0">
+        <Label htmlFor="tags" className="mb-2">
+          Tags
+        </Label>
+
+        {editableValues?.map(({ tag, id }) => (
+          <div key={id} className="flex mb-4 gap-3 items-center">
+            <Input disabled value={tag} />
+            <Button>
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
+        {fields.map((field, index) => (
+          <Input
+            id="tags"
+            key={field.id}
+            autoComplete="off"
+            className="mb-4"
+            {...register(`tags.${index}.tag`)}
+          />
+        ))}
       </InputWrapper>
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          append({ tag: '', id: '' })
+        }}
+      >
+        <PlusIcon className="mr-2" /> {fields.length > 0 ? 'Add another tag' : 'Add a tag'}
+      </Button>
     </div>
   )
 }

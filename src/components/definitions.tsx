@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   type Control,
   useFieldArray,
@@ -15,6 +15,7 @@ import { TextArea } from '@/components/ui/textarea'
 import type { SlangFormSchema } from '@/lib/validations/slang'
 import type { Pos } from '@prisma/client'
 import { PlusIcon } from '@radix-ui/react-icons'
+import { Card } from './ui/card'
 
 export function Examples({
   control,
@@ -30,29 +31,37 @@ export function Examples({
     name: `definitions.${nestIndex}.examples`
   })
   return (
-    <InputWrapper>
-      <div className="flex gap-3 items-center mb-3">
-        <Label htmlFor="example">Ejemplos</Label>
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            append({ example: '', id: '' })
-          }}
-        >
-          <PlusIcon />
-        </Button>
-      </div>
-      {fields.map((field, k) => (
-        <TextArea
-          key={field.id}
-          {...register(`definitions.${nestIndex}.examples.${k}.example`)}
-          rows={5}
-          cols={33}
-          id="examples"
-          placeholder="example"
-        />
-      ))}
-    </InputWrapper>
+    <div>
+      {fields.length > 0 && (
+        <InputWrapper className="mb-0">
+          <Label htmlFor={`examples-${nestIndex}`} className="mb-2">
+            Examples
+          </Label>
+          {fields.map((field, k) => (
+            <TextArea
+              key={field.id}
+              {...register(`definitions.${nestIndex}.examples.${k}.example`)}
+              rows={5}
+              cols={33}
+              id={`examples-${nestIndex}`}
+              placeholder="Pablo was a great guy, but..."
+              className="mb-4"
+            />
+          ))}
+        </InputWrapper>
+      )}
+      {/* <pre>{JSON.stringify(fields, null, 2)}</pre> */}
+
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          append({ example: '', id: '' })
+        }}
+      >
+        <PlusIcon className="mr-2" />
+        {fields.length > 0 ? `Add another example` : `Add an example`}
+      </Button>
+    </div>
   )
 }
 
@@ -91,38 +100,45 @@ function Definition({
   ]
 
   return (
-    <Fragment key={field.id}>
-      <GeneralizedSelect
-        items={items}
-        defaultValue={pos}
-        onValueChange={(value) => setValue(`definitions.${index}.pos`, value as Pos)}
-      />
+    <Card className="mb-4" key={field.id}>
+      <div className="flex gap-3 items-center mb-4">
+        <Label htmlFor="pos">Part of Speech</Label>
+        <GeneralizedSelect
+          items={items}
+          defaultValue={pos}
+          onValueChange={(value) => setValue(`definitions.${index}.pos`, value as Pos)}
+        />
+      </div>
       {pos === 'idiom' && (
-        <InputWrapper>
-          <Label htmlFor="idiom">Idiom</Label>
+        <InputWrapper className="mb-4">
+          <Label htmlFor={`idiom-${index}`} className="mb-2">
+            Idiom
+          </Label>
           <TextArea
             key={field.id}
             {...register(`definitions.${index}.idiom`)}
             rows={5}
             cols={33}
-            id="idiom"
+            id={`idiom-${index}`}
             placeholder="idiom"
           />
         </InputWrapper>
       )}
-      <InputWrapper>
-        <Label htmlFor="definition">Definición</Label>
+      <InputWrapper className="mb-4">
+        <Label htmlFor={`definition-${index}`} className="mb-2">
+          Definition
+        </Label>
         <TextArea
           key={field.id}
           {...register(`definitions.${index}.definition`)}
           rows={5}
           cols={33}
-          id="definition"
-          placeholder="definition"
+          id={`definition-${index}`}
+          placeholder="Once upon a time..."
         />
       </InputWrapper>
       <Examples {...{ control, register, nestIndex: index }} />
-    </Fragment>
+    </Card>
   )
 }
 
@@ -136,12 +152,15 @@ export function Definitions({
     name: `definitions`
   })
   return (
-    <div>
+    <fieldset className="mb-6 ring-1 px-2 py-1 ring-neutral-200 dark:ring-neutral-700 rounded-md">
+      <legend className="text-lg font-semibold mb-2">Definitions</legend>
+
       {fields.map((field, index) => (
         <Definition key={field.id} {...{ field, index, control, register, setValue }} />
       ))}
 
       <Button
+        className="mb-2"
         onClick={(e) => {
           e.preventDefault()
           append({
@@ -153,8 +172,9 @@ export function Definitions({
           })
         }}
       >
-        append
+        <PlusIcon className="mr-2" />
+        Add Another Definition
       </Button>
-    </div>
+    </fieldset>
   )
 }

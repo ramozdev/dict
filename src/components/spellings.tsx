@@ -20,33 +20,40 @@ export function Spellings({
     name: `spellings`
   })
   return (
-    <div>
-      <InputWrapper>
-        <div className="flex gap-3 items-center mb-3">
-          <Label htmlFor="spellings">Spellings</Label>
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              append({ spelling: '', id: '' })
-            }}
-          >
-            <PlusIcon />
-          </Button>
-        </div>
-        <div className="grid gap-3">
-          {editableValues?.map(({ spelling, id }) => (
-            <div key={id} className="flex gap-3 items-center">
-              <Input disabled value={spelling} />
-              <Button>
-                <TrashIcon />
-              </Button>
-            </div>
-          ))}
-          {fields.map((field, index) => (
-            <Input id="spellings" key={field.id} {...register(`spellings.${index}.spelling`)} />
-          ))}
-        </div>
+    <div className="mb-4">
+      <InputWrapper className="mb-0">
+        <Label htmlFor="spellings" className="mb-2">
+          Spellings
+        </Label>
+
+        {editableValues?.map(({ spelling, id }) => (
+          <div key={id} className="flex mb-4 gap-3 items-center">
+            <Input disabled value={spelling} />
+            <Button>
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
+        {fields.map((field, index) => (
+          <Input
+            id="spellings"
+            autoComplete="off"
+            className="mb-4"
+            key={field.id}
+            {...register(`spellings.${index}.spelling`)}
+          />
+        ))}
       </InputWrapper>
+
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          append({ spelling: '', id: '' })
+        }}
+      >
+        <PlusIcon className="mr-2" />{' '}
+        {fields.length > 0 ? 'Add another spelling' : 'Add a spelling'}
+      </Button>
     </div>
   )
 }

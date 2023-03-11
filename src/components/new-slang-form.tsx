@@ -55,21 +55,26 @@ export function SlangForm({ defaultValues }: Props) {
     // })
   }
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto">
+    <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto max-w-prose mb-8">
       <fieldset>
-        <legend>Slang</legend>
+        <legend className="text-xl mb-4 font-bold">Add A New Slang</legend>
 
-        <Checkbox
-          id="explicit"
-          defaultChecked={false}
-          onCheckedChange={(value) => setValue('explicit', value as boolean)}
-          {...register('explicit')}
-        />
-        <Label htmlFor="explicit">Explicit</Label>
         <InputWrapper>
-          <Label htmlFor="slang">Slang</Label>
+          <Label htmlFor="slang" className="items-center flex gap-4 mb-2">
+            Slang
+            <InputWrapper className="flex mb-0 items-center gap-2">
+              <Checkbox
+                id="explicit"
+                defaultChecked={false}
+                onCheckedChange={(value) => setValue('explicit', value as boolean)}
+                {...register('explicit')}
+              />
+              <Label htmlFor="explicit">Explicit</Label>
+            </InputWrapper>
+          </Label>
           <Input className="input" id="slang" {...register('slang')} />
         </InputWrapper>
+
         <Spellings {...{ control, register }} />
       </fieldset>
 
@@ -78,26 +83,28 @@ export function SlangForm({ defaultValues }: Props) {
       <Antonyms {...{ control, register }} />
       <Tags {...{ control, register }} />
 
-      <fieldset>
-        <legend>Sufijos</legend>
+      <fieldset className="mb-6 ring-1 px-2 py-1 ring-neutral-200 dark:ring-neutral-700 rounded-md">
+        <legend className="text-lg font-semibold mb-2">Sufijos</legend>
 
         <InputWrapper>
-          <Label htmlFor="diminutive">Diminutivo</Label>
-          <Input id="diminutive" placeholder="diminutive" {...register('diminutive')} />
+          <Label htmlFor="diminutive" className="mb-2">
+            Diminutivo
+          </Label>
+          <Input id="diminutive" {...register('diminutive')} />
         </InputWrapper>
         <InputWrapper>
-          <Label htmlFor="augmentative">Aumentativo</Label>
-          <Input id="augmentative" placeholder="augmentative" {...register('augmentative')} />
+          <Label htmlFor="augmentative" className="mb-2">
+            Aumentativo
+          </Label>
+          <Input id="augmentative" {...register('augmentative')} />
         </InputWrapper>
       </fieldset>
 
-      <fieldset>
-        <legend>Definitions</legend>
+      <Definitions {...{ control, register, handleSubmit, setValue }} />
 
-        <Definitions {...{ control, register, handleSubmit, setValue }} />
-      </fieldset>
-
-      <Button onClick={() => console.log({ errors })}>Submit</Button>
+      <Button onClick={() => console.log({ errors })} className="w-full">
+        Submit
+      </Button>
     </form>
   )
 }

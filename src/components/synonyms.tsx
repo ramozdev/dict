@@ -20,34 +20,39 @@ export function Synonyms({
     name: `synonyms`
   })
   return (
-    <div>
-      <InputWrapper>
-        <div className="flex gap-3 items-center mb-3">
-          <Label htmlFor="synonyms">Synonyms</Label>
-          <Button
-            onClick={(e) => {
-              e.preventDefault()
-              append({ synonym: '', id: '' })
-            }}
-          >
-            <PlusIcon />
-          </Button>
-        </div>
+    <div className="mb-4">
+      <InputWrapper className="mb-0">
+        <Label htmlFor="synonyms" className="mb-2">
+          Synonyms
+        </Label>
 
-        <div className="grid gap-3">
-          {editableValues?.map(({ synonym, id }) => (
-            <div key={id} className="flex gap-3 items-center">
-              <Input disabled value={synonym} />
-              <Button>
-                <TrashIcon />
-              </Button>
-            </div>
-          ))}
-          {fields.map((field, index) => (
-            <Input id="synonyms" key={field.id} {...register(`synonyms.${index}.synonym`)} />
-          ))}
-        </div>
+        {editableValues?.map(({ synonym, id }) => (
+          <div key={id} className="flex mb-4 gap-3 items-center">
+            <Input disabled value={synonym} />
+            <Button>
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
+        {fields.map((field, index) => (
+          <Input
+            id="synonyms"
+            autoComplete="off"
+            className="mb-4"
+            key={field.id}
+            {...register(`synonyms.${index}.synonym`)}
+          />
+        ))}
       </InputWrapper>
+
+      <Button
+        onClick={(e) => {
+          e.preventDefault()
+          append({ synonym: '', id: '' })
+        }}
+      >
+        <PlusIcon className="mr-2" /> {fields.length > 0 ? 'Add another synonym' : 'Add a synonym'}
+      </Button>
     </div>
   )
 }
