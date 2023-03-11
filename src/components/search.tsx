@@ -11,11 +11,12 @@ import { useForm } from 'react-hook-form'
 import { useDebounce } from 'use-debounce'
 import { api } from '@/utils/api'
 // import { Card } from '@/components/ui/card'
-import Link from 'next/link'
 import { Input } from './ui/input'
 import { CommandLoading } from 'cmdk'
+import { useRouter } from 'next/router'
 
 export function CommandDialogDemo() {
+  const router = useRouter()
   const { register, watch } = useForm({
     defaultValues: { search: '' }
   })
@@ -86,9 +87,15 @@ export function CommandDialogDemo() {
             ) : (
               <CommandGroup heading="Results">
                 {data.map(({ slang, slug }) => (
-                  <Link key={slang} href={`/${slug}`}>
-                    <CommandItem>{slang}</CommandItem>
-                  </Link>
+                  <CommandItem
+                    key={slang}
+                    onSelect={async () => {
+                      await router.push(`/${slug}`)
+                      setOpen(false)
+                    }}
+                  >
+                    {slang}
+                  </CommandItem>
                 ))}
               </CommandGroup>
             )
